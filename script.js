@@ -1,3 +1,10 @@
+//to do 
+//backspace
+//decimal
+//deal with long numbers
+//roman
+//words
+
 console.clear();
 const numberButtons = document.querySelectorAll(".num");
 const operatorButtons = document.querySelectorAll(".operator");
@@ -18,9 +25,9 @@ let answer;
 function reset(prevAnswer){
   display.innerText = prevAnswer;
   expressionToCalculate.length=0;
-  leftOperand = 0;
+  leftOperand = prevAnswer;
   rightOperand = 0;
-  expressionToCalculate = [prevAnswer];
+  expressionToCalculate[0] = leftOperand;
 }
 
 function processAnswer(answer){
@@ -55,20 +62,20 @@ function processExpressionToCalculate(expressionArray) {
 }
 
 function processInput(input) {
-  if (expressionToCalculate.length == 0 && numbers.includes(input)) {
-    if (display.innerHTML == 0) {
+  if ((expressionToCalculate.length === 0 || expressionToCalculate.length === 1) && numbers.includes(input)) {
+    if (display.innerHTML === 0) {
       display.innerText = input;
       leftOperand = input;
       expressionToCalculate[0] = input;
     } else {
       display.innerText += input;
-      leftOperand += input;
-      expressionToCalculate[0] += input;
+      console.log("leftOperand: " + leftOperand)
+      leftOperand = parseFloat(leftOperand+input)
+      expressionToCalculate[0] = leftOperand;
     }
   }
   if (expressionToCalculate.length == 1 && operators.includes(input)) {
     operator = input;
-    // expressionToCalculate.push(leftOperand);
     expressionToCalculate.push(operator);
     display.innerText += input;
   }
@@ -109,10 +116,11 @@ function calculate(rightOperand) {
 }
 
 function clearDisplay() {
+  console.clear();
   display.innerText = "";
-
   result.innerText = 0;
   expressionToCalculate.length = 0;
+  leftOperand = 0;
   rightOperand = 0;
 }
 
