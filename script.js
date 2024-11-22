@@ -1,9 +1,11 @@
-//to do 
-//backspace
-//decimal
-//deal with long numbers
-//roman
-//words
+// to do ********************************
+// backspace
+// decimal
+// deal with long numbers
+// roman
+// words
+// calculate result if an operator key is pressed
+// if I only put one number and press equals, show that one number in result.
 
 console.clear();
 const numberButtons = document.querySelectorAll(".num");
@@ -11,9 +13,8 @@ const operatorButtons = document.querySelectorAll(".operator");
 const numbersAndOperators = [...numberButtons, ...operatorButtons];
 const display = document.querySelector("#display");
 const result = document.querySelector("#result");
-let leftOperand = 0;
-let rightOperand = 0;
-let partOfExpression = leftOperand;
+let leftOperand = "";
+let rightOperand = "";
 let expressionToCalculate = [];
 let operatorButtonsArray = Array.from(operatorButtons);
 let operator = "";
@@ -22,98 +23,103 @@ const equals = document.getElementById("equals");
 let operators = ["+", "-", "*", "/"];
 let answer;
 
-function reset(prevAnswer){
+function reset(prevAnswer) {
   display.innerText = prevAnswer;
-  expressionToCalculate.length=0;
+  expressionToCalculate.length = 0;
   leftOperand = prevAnswer;
   rightOperand = 0;
   expressionToCalculate[0] = leftOperand;
 }
 
-function processAnswer(answer){
+function processAnswer(answer) {
   result.innerText = answer;
   reset(answer);
 }
 
 function processExpressionToCalculate(expressionArray) {
   const [left, operator, right] = expressionArray;
-  console.log("left: " + left)
+  console.log("left: " + left);
   console.log("operator: " + operator);
   console.log("right: " + right);
   switch (operator) {
     case "+":
-       answer =  +left + +right;
-       processAnswer(answer);
-       break;
+      answer = +left + +right;
+      processAnswer(answer);
+      break;
     case "-":
-       answer =  +left - +right;
-       processAnswer(answer);
-       break;
+      answer = +left - +right;
+      processAnswer(answer);
+      break;
     case "*":
-        answer =  +left * +right;
-        processAnswer(answer);
+      answer = +left * +right;
+      processAnswer(answer);
 
       break;
-      case "/":
-        answer =  +left / +right;
-        processAnswer(answer);
+    case "/":
+      answer = +left / +right;
+      processAnswer(answer);
       break;
   }
 }
 
 function processInput(input) {
-  if ((expressionToCalculate.length === 0 || expressionToCalculate.length === 1) && numbers.includes(input)) {
-    if (display.innerHTML === 0) {
+  if (
+    // Processing leftOperand
+    (expressionToCalculate.length === 0 ||
+      expressionToCalculate.length === 1) &&
+    numbers.includes(input)
+  ) {
+    if (display.innerHTML === '0') {
       display.innerText = input;
       leftOperand = input;
       expressionToCalculate[0] = input;
     } else {
-      display.innerText += input;
-      console.log("leftOperand: " + leftOperand)
-      leftOperand = parseFloat(leftOperand+input)
+      if (input == "." && !leftOperand.includes(".")) {
+        display.innerText += input;
+        leftOperand += input;
+      } else {
+        display.innerText += input;
+        leftOperand += input;
+      }
+
       expressionToCalculate[0] = leftOperand;
     }
   }
+  // Processing operator
   if (expressionToCalculate.length == 1 && operators.includes(input)) {
     operator = input;
     expressionToCalculate.push(operator);
     display.innerText += input;
+    
   }
-  if (expressionToCalculate.length == 2) {
-    if (numbers.includes(input)) {
-      if (rightOperand == 0) {
-        display.innerText = input;
-        rightOperand = input;
-      } else {
-        display.innerText += input;
-        rightOperand += input;
-      }
-      equals.addEventListener("click", () => {
-        if (expressionToCalculate.length == 2) {
-          expressionToCalculate.push(rightOperand);
-          console.log("expression to calculate:", expressionToCalculate);
-          processExpressionToCalculate(expressionToCalculate);
-        }
-      });
+  // Processing rightOperand
+  if (expressionToCalculate.length == 2 && numbers.includes(input)) {
+    if (rightOperand === "0") {
+      display.innerText = input;
+      rightOperand = input;
+      expressionToCalculate[2] = input;
+    } else if (input == "." && !rightOperand.includes(".")) {
+      display.innerText += input;
+      rightOperand += input;
+    } else {
+      display.innerText += input;
+      rightOperand += input;
     }
+    expressionToCalculate[2] = rightOperand;
+    console.log("expression to calculate", expressionToCalculate);
+    // adds eventListener to equals button
+    
   }
   console.log("expression to calculate", expressionToCalculate);
+}
 
-  //   else {
-  //     result.innerText = "This calculation can handle one operation at a time";
-  //   }
-  
-}
-function calculate(rightOperand) {
-  if (expressionToCalculate.length == 3) {
+equals.addEventListener("click", () => {
+  if (expressionToCalculate.length == 2) {
     expressionToCalculate.push(rightOperand);
-    console.log("expression to calculate", expressionToCalculate);
-    //   const resultValue = calculate(parseFloat(expressionToCalculate[0]), expressionToCalculate[1], parseFloat(expressionToCalculate[2]));
-    //   result.innerText = resultValue;
-    //   leftOperand = resultValue;
-    //   expressionToCalculate = [leftOperand];
+    console.log("expression to calculate:", expressionToCalculate);
+    processExpressionToCalculate(expressionToCalculate);
   }
-}
+});
 
 function clearDisplay() {
   console.clear();
@@ -132,15 +138,15 @@ numbersAndOperators.forEach((btn) => {
     // document.querySelector("#input").value = currentInput + button.textContent;
   });
 });
-//data-type = "operator"
-// function calculate(leftOperand, operator, rightOperand) {
-//   if (operator === "+") {
-//     return leftOperand + rightOperand;
-//   } else if (operator === "-") {
-//     return leftOperand - rightOperand;
-//   } else if (operator === "*") {
-//     return leftOperand * rightOperand;
-//   } else {
-//     return leftOperand / rightOperand;
-//   }
+
+
+// function backspace() {
+//   console.log("expressionToCalculate: ", expressionToCalculate)
+//   display.innerText = display.innerText.slice(0, -1);
+//   expressionAsString = expressionToCalculate.join(",");
+//   console.log(expressionAsString);
+//   expressionAsString = expressionAsString.slice(0, -1)
+//   console.log(expressionAsString);
+//   expressionToCalculate =expressionAsString.split(",");
+//   console.log(expressionToCalculate);
 // }
