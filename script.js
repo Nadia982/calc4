@@ -28,6 +28,7 @@ function prepareForFurtherCalculations(prevAnswer) {
 }
 
 function processAnswer(answer) {
+  result.style.fontSize = "56px";
   result.innerText = answer;
   prepareForFurtherCalculations(answer);
 }
@@ -37,28 +38,35 @@ function processExpressionToCalculate(expressionArray) {
   console.log("left: " + left);
   console.log("operator: " + operator);
   console.log("right: " + right);
-  switch (operator) {
-    case "+":
-      answer = +left + +right;
-      processAnswer(answer);
-      break;
-    case "-":
-      answer = +left - +right;
-      processAnswer(answer);
-      break;
-    case "*":
-      answer = +left * +right;
-      processAnswer(answer);
+  if (operator === "/" && right === "0") {
+    result.innerText = "Can't divide by 0";
+  } else if (right === "") {
+    result.innerText = "Please enter a second number to calculate";
+  } else {
+    switch (operator) {
+      case "+":
+        answer = +left + +right;
+        processAnswer(answer);
+        break;
+      case "-":
+        answer = +left - +right;
+        processAnswer(answer);
+        break;
+      case "*":
+        answer = +left * +right;
+        processAnswer(answer);
 
-      break;
-    case "/":
-      answer = +left / +right;
-      processAnswer(answer);
-      break;
+        break;
+      case "/":
+        answer = +left / +right;
+        processAnswer(answer);
+        break;
+    }
   }
 }
 
 function processInput(input) {
+  if(display.innerText.length < 20){
   if (
     // Processing leftOperand
     (expressionToCalculate.length === 0 ||
@@ -80,6 +88,7 @@ function processInput(input) {
       expressionToCalculate[0] = leftOperand;
     }
   }
+
   // Processing operator
   if (expressionToCalculate.length == 1 && operators.includes(input)) {
     operator = input;
@@ -107,6 +116,9 @@ function processInput(input) {
     }
     expressionToCalculate[2] = rightOperand;
     console.log("expression to calculate", expressionToCalculate);
+  }} else {
+    result.style.fontSize = "28px";
+      result.innerText = "Display shows up 20 characters";
   }
 }
 
@@ -122,8 +134,10 @@ equals.addEventListener("click", () => {
 
 operatorButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
-    console.log("hello");
-    if (expressionToCalculate.length == 3) {
+    if (expressionToCalculate.length == 2) {
+      result.style.fontSize = "28px";
+      result.innerText = "Please enter a second number to calculate";
+    } else if (expressionToCalculate.length == 3) {
       processExpressionToCalculate(expressionToCalculate);
     }
   });
