@@ -18,6 +18,8 @@ let numbers = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "."];
 const equals = document.getElementById("equals");
 let operators = ["+", "-", "*", "/"];
 let answer;
+let smallFont = "28px";
+let largeFont = "56px"
 
 function prepareForFurtherCalculations(prevAnswer) {
   display.innerText = prevAnswer;
@@ -28,9 +30,15 @@ function prepareForFurtherCalculations(prevAnswer) {
 }
 
 function processAnswer(answer) {
-  result.style.fontSize = "56px";
-  result.innerText = answer;
-  prepareForFurtherCalculations(answer);
+  console.log(answer.toString().length);
+  if (answer.toFixed(6).toString().length<14){
+  result.style.fontSize = largeFont;
+  result.innerText = answer.toFixed(6);
+  prepareForFurtherCalculations(answer.toFixed(6));
+}else {
+  result.style.fontSize = smallFont;
+  result.innerText = "This calculator only shows answers up to 14 digits long. Please press 'AC' and try again."
+}
 }
 
 function processExpressionToCalculate(expressionArray) {
@@ -117,7 +125,7 @@ function processInput(input) {
     expressionToCalculate[2] = rightOperand;
     console.log("expression to calculate", expressionToCalculate);
   }} else {
-    result.style.fontSize = "28px";
+    result.style.fontSize = smallFont;
       result.innerText = "Display shows up 20 characters";
   }
 }
@@ -126,6 +134,7 @@ equals.addEventListener("click", () => {
   if (expressionToCalculate.length === 1 && expressionToCalculate[0] === "") {
     result.innerText = 0;
   } else if (expressionToCalculate.length === 1) {
+    result.style.fontSize = largeFont;
     result.innerText = expressionToCalculate[0];
   } else if (expressionToCalculate.length == 3) {
     processExpressionToCalculate(expressionToCalculate);
@@ -135,7 +144,7 @@ equals.addEventListener("click", () => {
 operatorButtons.forEach((btn) => {
   btn.addEventListener("click", () => {
     if (expressionToCalculate.length == 2) {
-      result.style.fontSize = "28px";
+      result.style.fontSize = smallFont;
       result.innerText = "Please enter a second number to calculate";
     } else if (expressionToCalculate.length == 3) {
       processExpressionToCalculate(expressionToCalculate);
