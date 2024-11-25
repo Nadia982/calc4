@@ -176,6 +176,19 @@ function backspace() {
   console.log(expressionToCalculate);
 }
 
+function percent(){
+  calculate();
+  let num = result.innerText;
+  if (num === "Infinity" || num === "-Infinity" || num === "NaN") {
+    result.style.fontSize = "32px";
+    result.innerText = "Error: cannot calculate percentage of infinity or NaN";
+  } else {
+    let percentage = parseFloat((num / 100).toFixed(6));
+    result.innerText = `${num}%`;
+    prepareForFurtherCalculations(percentage)
+  }
+}
+
 function numberToRomanNumerals() {
   calculate();
   let num = result.innerText;
